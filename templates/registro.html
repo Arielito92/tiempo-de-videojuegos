@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Registro</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <h1>Crear cuenta</h1>
+
+    {% if error %}
+
+    <div class="mensaje-error">
+
+        {{ error }}
+
+    </div>
+
+    {% endif %}
+
+    <form action="/registro" method="POST" class="search-box">
+
+        <input type="text"
+               name="nombre"
+               placeholder="Nombre de usuario">
+
+        <br><br>
+
+        <input type="password"
+               name="contraseña"
+               placeholder="Contraseña">
+
+        <br><br>
+
+        <button type="submit">
+            Crear cuenta
+        </button>
+
+    </form>
+
+</body>
+
+</html>

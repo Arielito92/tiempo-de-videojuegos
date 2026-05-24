@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>{{ nombre }}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="perfil-header">
+
+
+        <div class="header-perfil">
+
+    <div class="banner-perfil"></div>
+
+    <div class="contenido-perfil">
+
+        <div class="avatar-grande">
+
+         {% if foto_usuario %}
+
+         <img
+         src="/static/uploads/{{ foto_usuario }}"
+         class="foto-perfil">
+
+         {% else %}
+
+         {{ usuario[0] }}
+
+         {% endif %}
+
+        </div>
+
+        <form
+action="/subir_foto"
+method="POST"
+enctype="multipart/form-data">
+
+    <input
+    type="file"
+    name="foto">
+
+    <button type="submit">
+
+        Subir foto
+
+    </button>
+
+</form>
+
+        <h1 class="nombre-perfil">
+            {{ usuario }}
+        </h1>
+
+        <div class="stats-perfil">
+
+            <div class="stat-box">
+
+                <h2>{{ reseñas|length }}</h2>
+
+                <p>Reseñas</p>
+
+            </div>
+
+            <div class="stat-box">
+
+                <h2>{{ favoritos|length }}</h2>
+
+                <p>Favoritos</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    </div>
+
+<h2 class="perfil-titulo">
+    Juegos favoritos
+</h2>
+
+<h2 class="titulo-seccion">
+    ⭐ Juegos Favoritos
+</h2>
+
+<div class="grid-favoritos">
+
+{% for juego in favoritos %}
+
+<a
+href="/juego/{{ juego.id }}"
+class="card-favorito">
+
+    <img
+    src="{{ juego.background_image }}">
+
+    <div class="info-favorito">
+
+        <h3>{{ juego.name }}</h3>
+
+
+    </div>
+
+</a>
+
+{% endfor %}
+
+</div>
+
+    <h2 class="perfil-titulo">
+        Reseñas recientes
+    </h2>
+
+    <div class="perfil-reseñas">
+
+        {% for reseña in reseñas %}
+
+            <div class="perfil-card">
+
+                <p class="perfil-juego">
+                    {{ reseña[0] }}
+                </p>
+
+                <p class="perfil-nota">
+                    ⭐ {{ reseña[1] }}/10
+                </p>
+
+                <p class="perfil-comentario">
+                    {{ reseña[2] }}
+                </p>
+
+                <p class="likes-perfil">
+
+                    👍 {{ reseña[3] }} likes
+
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</body>
+
+</html>

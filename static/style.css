@@ -1,0 +1,1781 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    background-color: #111;
+    color: white;
+    font-family: Arial;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #00ffcc;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 50px;
+}
+
+p {
+    text-align: center;
+    color: #cccccc;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.search-box {
+    text-align: center;
+    margin-top: 30px;
+}
+
+input {
+    padding: 10px;
+    width: 300px;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #00ffcc;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.games-container{
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+    gap: 30px;
+
+    margin-top: 40px;
+}
+
+.game-card {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 12px;
+    width: 700px;
+    text-align: center;
+}
+
+.usuario-panel {
+
+    margin-bottom: 20px;
+
+}
+
+
+.usuario-panel a {
+
+    text-decoration: none;
+
+}
+
+
+.usuario-boton {
+
+    background-color: #00aa66;
+
+    color: white;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    margin-right: 10px;
+
+    font-weight: bold;
+
+    display: inline-block;
+
+}
+
+
+.usuario-boton:hover {
+
+    background-color: #00cc88;
+
+}
+
+
+.usuario-nombre {
+
+    color: white;
+
+    font-size: 18px;
+
+    margin-bottom: 10px;
+
+}
+
+.populares-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(260px, 1fr));
+
+    gap: 30px;
+
+    padding: 30px;
+
+}
+
+
+.juego-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    transition: 0.3s;
+
+    cursor: pointer;
+
+    background-color: #111;
+
+    border: 2px solid #00ff99;
+
+    box-shadow:
+        0 0 10px rgba(0,255,153,0.2);
+
+}
+
+
+.juego-card:hover {
+
+    transform: scale(1.04);
+
+    box-shadow:
+        0 0 20px #00ff99,
+        0 0 40px rgba(0,255,153,0.5);
+
+}
+
+.juego-card img {
+
+    width: 100%;
+
+    height: 320px;
+
+    object-fit: cover;
+
+    transition: 0.3s;
+
+    filter: brightness(0.7);
+
+}
+
+.juego-card:hover img {
+
+    transform: scale(1.08);
+
+    filter: brightness(1);
+
+}
+
+
+.juego-card h3 {
+
+    position: absolute;
+
+    bottom: 0;
+
+    width: 100%;
+
+    margin: 0;
+
+    padding: 18px;
+
+    background: linear-gradient(
+        transparent,
+        rgba(0,0,0,0.95)
+    );
+
+    color: #00ff99;
+
+    font-size: 20px;
+
+    text-align: left;
+
+    font-family: 'Press Start 2P', cursive;
+
+    text-shadow:
+        0 0 5px #00ff99;
+
+}
+
+.usuario-info {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.avatar-mini{
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 2px solid #00ffe1;
+
+    box-shadow: 0 0 10px #00ffe1;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+.avatar-mini:hover{
+
+    transform: scale(1.08);
+
+    box-shadow: 0 0 18px #00ffe1;
+}
+
+.perfil-header {
+
+    text-align: center;
+
+    margin-top: 40px;
+
+    margin-bottom: 40px;
+
+}
+
+
+.perfil-avatar {
+
+    width: 140px;
+
+    height: 140px;
+
+    border-radius: 50%;
+
+    border: 4px solid #00aa66;
+
+    background-color: white;
+
+}
+
+
+.perfil-header h1 {
+
+    color: white;
+
+    margin-top: 15px;
+
+    font-size: 40px;
+
+}
+
+
+.perfil-header p {
+
+    color: #bbbbbb;
+
+    font-size: 18px;
+
+}
+
+
+.perfil-titulo {
+
+    color: white;
+
+    margin-bottom: 20px;
+
+}
+
+
+.perfil-reseñas {
+
+    display: grid;
+
+    gap: 20px;
+
+}
+
+
+.perfil-card {
+
+    background-color: #111;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    border: 1px solid #222;
+
+}
+
+
+.perfil-juego {
+
+    color: #00cc88;
+
+    font-weight: bold;
+
+}
+
+
+.perfil-nota {
+
+    color: gold;
+
+    font-size: 18px;
+
+}
+
+
+.perfil-comentario {
+
+    color: white;
+
+}
+
+.favorito-boton {
+
+    background-color: #cc0033;
+
+    color: white;
+
+    border: none;
+
+    padding: 12px 20px;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    margin-top: 20px;
+
+}
+
+
+.favorito-boton:hover {
+
+    background-color: #ff0044;
+
+}
+
+body {
+
+    margin: 0;
+
+    background-color: #0b0b0b;
+
+    font-family: Arial, sans-serif;
+
+}
+
+
+.hero {
+
+    height: 500px;
+
+    background-image: url("https://images.unsplash.com/photo-1511512578047-dfb367046420");
+
+    background-size: cover;
+
+    background-position: center;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+
+}
+
+
+.hero-overlay {
+
+    background-color: rgba(0, 0, 0, 0.75);
+
+    padding: 50px;
+
+    border-radius: 20px;
+
+    text-align: center;
+
+    border: 2px solid #00ff99;
+
+    box-shadow:
+        0 0 10px #00ff99,
+        0 0 30px #00ff99;
+
+}
+
+
+.hero-titulo {
+
+    color: #00ff99;
+
+    font-size: 60px;
+
+    margin-bottom: 20px;
+
+    font-family: 'Press Start 2P', cursive;
+
+    text-shadow:
+        0 0 5px #00ff99,
+        0 0 10px #00ff99,
+        0 0 20px #00ff99;
+
+    line-height: 1.4;
+
+}
+
+
+.hero-subtitulo {
+
+    color: #cccccc;
+
+    font-size: 22px;
+
+}
+
+.categoria-titulo {
+
+    color: #00ff99;
+
+    font-family: 'Press Start 2P', cursive;
+
+    margin-left: 30px;
+
+    margin-top: 50px;
+
+    text-shadow:
+        0 0 10px #00ff99;
+
+}
+
+.busqueda-form {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-top: 40px;
+
+    margin-bottom: 40px;
+
+}
+
+
+.busqueda-input {
+
+    width: 400px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    border: 2px solid #00ff99;
+
+    background-color: #111;
+
+    color: white;
+
+    font-size: 18px;
+
+    outline: none;
+
+    box-shadow:
+        0 0 10px rgba(0,255,153,0.3);
+
+}
+
+
+.busqueda-input::placeholder {
+
+    color: #777;
+
+}
+
+
+.busqueda-boton {
+
+    background-color: #00aa66;
+
+    color: white;
+
+    border: none;
+
+    padding: 15px 25px;
+
+    border-radius: 12px;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+
+.busqueda-boton:hover {
+
+    background-color: #00ff99;
+
+    color: black;
+
+    box-shadow:
+        0 0 20px #00ff99;
+
+}
+
+.banner-juego {
+
+    width: 100%;
+
+    height: 450px;
+
+    overflow: hidden;
+
+    border-radius: 25px;
+
+    margin-bottom: 30px;
+
+    box-shadow: 0 0 30px cyan;
+}
+
+.banner-imagen {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.screenshots-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    gap: 20px;
+
+    margin-top: 20px;
+}
+
+.screenshot {
+
+    width: 100%;
+
+    border-radius: 20px;
+
+    transition: 0.3s;
+
+    box-shadow: 0 0 15px black;
+}
+
+.screenshot:hover {
+
+    transform: scale(1.03);
+
+    box-shadow: 0 0 20px cyan;
+}
+
+.trailer-container {
+
+    margin-top: 30px;
+
+    margin-bottom: 30px;
+}
+
+.trailer-container video {
+
+    width: 100%;
+
+    border-radius: 25px;
+
+    box-shadow: 0 0 25px cyan;
+}
+
+.titulo-juego {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-top: 20px;
+}
+
+.titulo-juego h1 {
+
+    font-size: 55px;
+
+    color: white;
+}
+
+.nota-juego {
+
+    font-size: 30px;
+
+    background: rgba(0,255,255,0.2);
+
+    padding: 15px 25px;
+
+    border-radius: 20px;
+
+    color: cyan;
+
+    font-weight: bold;
+
+    box-shadow: 0 0 20px cyan;
+}
+
+.generos,
+.plataformas {
+
+    margin-top: 20px;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+.tag-genero,
+.tag-plataforma {
+
+    background: rgba(255,255,255,0.1);
+
+    padding: 10px 18px;
+
+    border-radius: 15px;
+
+    color: white;
+
+    backdrop-filter: blur(5px);
+
+    border: 1px solid cyan;
+}
+
+.titulo-screenshots{
+
+    font-size: 38px;
+
+    color: #00ffe1;
+
+    text-align: center;
+
+    margin-top: 60px;
+
+    margin-bottom: 30px;
+
+    text-shadow: 0 0 15px #00ffe1;
+
+    font-family: 'Orbitron', sans-serif;
+}
+
+
+.galeria-juego{
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    margin-bottom: 60px;
+}
+
+
+.imagen-galeria{
+
+    width: 420px;
+
+    border-radius: 20px;
+
+    border: 3px solid #00ffe1;
+
+    transition: 0.3s;
+
+    box-shadow: 0 0 20px rgba(0,255,225,0.4);
+}
+
+
+.imagen-galeria:hover{
+
+    transform: scale(1.05);
+
+    box-shadow: 0 0 35px #00ffe1;
+}
+
+.header-perfil{
+
+    position: relative;
+
+    margin-bottom: 60px;
+}
+
+
+.banner-perfil{
+
+    height: 260px;
+
+    background:
+    linear-gradient(
+  rgba(0,0,0,0.5),
+  rgba(0,0,0,0.9)
+    ),
+
+    url("https://images.unsplash.com/photo-1511512578047-dfb367046420");
+
+    background-size: cover;
+
+    background-position: center;
+
+    border-bottom: 4px solid #00ffe1;
+}
+
+
+.contenido-perfil{
+
+    text-align: center;
+
+    margin-top: -70px;
+}
+
+
+.avatar-grande{
+
+    width: 140px;
+
+    height: 140px;
+
+    border-radius: 50%;
+
+    background: #00ffe1;
+
+    color: black;
+
+    font-size: 60px;
+
+    font-weight: bold;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: auto;
+
+    border: 5px solid black;
+
+    box-shadow: 0 0 30px #00ffe1;
+}
+
+
+.nombre-perfil{
+
+    font-size: 42px;
+
+    margin-top: 20px;
+
+    color: white;
+
+    text-shadow: 0 0 15px #00ffe1;
+}
+
+
+.stats-perfil{
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 30px;
+
+    margin-top: 30px;
+}
+
+
+.stat-box{
+
+    background: rgba(0,0,0,0.7);
+
+    padding: 20px 35px;
+
+    border-radius: 20px;
+
+    border: 2px solid #00ffe1;
+
+    box-shadow: 0 0 20px rgba(0,255,225,0.4);
+}
+
+
+.stat-box h2{
+
+    color: #00ffe1;
+
+    font-size: 36px;
+}
+
+
+.stat-box p{
+
+    color: white;
+}
+
+.titulo-seccion{
+
+    font-size: 38px;
+
+    color: #00ffe1;
+
+    margin-top: 60px;
+
+    margin-bottom: 30px;
+
+    text-align: center;
+
+    text-shadow: 0 0 15px #00ffe1;
+}
+
+
+.grid-favoritos{
+
+    display: grid;
+
+    grid-template-columns:
+    repeat(auto-fit, minmax(260px, 1fr));
+
+    gap: 25px;
+
+    margin-bottom: 60px;
+}
+
+
+.card-favorito{
+
+    background: rgba(255,255,255,0.05);
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    text-decoration: none;
+
+    transition: 0.3s;
+
+    border: 2px solid rgba(0,255,225,0.3);
+
+    backdrop-filter: blur(8px);
+}
+
+
+.card-favorito:hover{
+
+    transform: translateY(-8px);
+
+    box-shadow: 0 0 30px #00ffe1;
+}
+
+
+.card-favorito img{
+
+    width: 100%;
+
+    height: 170px;
+
+    object-fit: cover;
+}
+
+
+.info-favorito{
+
+    padding: 15px;
+}
+
+
+.info-favorito h3{
+
+    color: white;
+
+    font-size: 24px;
+
+    margin-bottom: 10px;
+}
+
+
+.info-favorito p{
+
+    color: #00ffe1;
+
+    font-weight: bold;
+}
+
+.foto-perfil{
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+.pagina-juego{
+
+    display: flex;
+
+    gap: 40px;
+
+    padding: 40px;
+
+    align-items: flex-start;
+}
+
+
+.columna-izquierda{
+
+    width: 30%;
+}
+
+
+.columna-derecha{
+
+    width: 70%;
+}
+
+
+.portada-juego{
+
+    width: 100%;
+
+    border-radius: 20px;
+
+    box-shadow: 0 0 25px cyan;
+}
+
+
+.titulo-juego{
+
+    font-size: 50px;
+
+    color: white;
+
+    margin-bottom: 20px;
+
+    text-shadow: 0 0 15px cyan;
+}
+
+
+.descripcion-juego{
+
+    color: #d8d8d8;
+
+    font-size: 18px;
+
+    line-height: 1.9;
+
+    margin-top: 25px;
+
+    margin-bottom: 35px;
+
+    background: rgba(20,20,20,0.75);
+
+    border-left: 4px solid cyan;
+
+    padding: 25px;
+
+    border-radius: 14px;
+
+    box-shadow: 0 0 25px rgba(0,255,255,0.08);
+}
+
+
+.generos{
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+
+.tag-genero{
+
+    padding: 10px 18px;
+
+    border: 2px solid cyan;
+
+    border-radius: 20px;
+
+    color: white;
+}
+
+
+.screenshots-grid{
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+
+.screenshot{
+
+    width: 100%;
+
+    border-radius: 15px;
+
+    transition: 0.3s;
+
+    cursor: pointer;
+}
+
+
+.screenshot:hover{
+
+    transform: scale(1.03);
+
+    box-shadow: 0 0 20px cyan;
+}
+
+
+.seccion-reseñas{
+
+    margin-top: 50px;
+}
+
+
+.titulo-reseñas{
+
+    font-size: 35px;
+
+    margin-bottom: 30px;
+
+    color: white;
+}
+
+
+.form-reseña{
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+    margin-bottom: 40px;
+}
+
+
+.form-reseña input,
+.form-reseña textarea{
+
+    padding: 18px;
+
+    border-radius: 18px;
+
+    border: 2px solid rgba(0,255,255,0.3);
+
+    background: rgba(20,20,20,0.9);
+
+    color: white;
+
+    font-size: 16px;
+
+    outline: none;
+
+    transition: 0.3s;
+
+    box-shadow: 0 0 10px rgba(0,255,255,0.1);
+}
+
+
+.form-reseña input:focus,
+.form-reseña textarea:focus{
+
+    border: 2px solid cyan;
+
+    box-shadow: 0 0 20px cyan;
+}
+
+
+.form-reseña textarea{
+
+    min-height: 140px;
+
+    resize: vertical;
+}
+
+.form-reseña button{
+
+    background: cyan;
+
+    color: black;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.card-reseña{
+
+    background: #111;
+
+    border: 2px solid cyan;
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    margin-bottom: 25px;
+
+    box-shadow: 0 0 15px rgba(0,255,255,0.3);
+}
+
+
+.reseña-top{
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+
+.usuario-reseña{
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: white;
+
+    font-weight: bold;
+}
+
+
+.avatar-reseña{
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    background: cyan;
+
+    color: black;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: bold;
+}
+
+
+.nota-reseña{
+
+    color: gold;
+
+    font-size: 22px;
+
+    font-weight: bold;
+}
+
+
+.texto-reseña{
+
+    color: #ddd;
+
+    line-height: 1.7;
+}
+
+.foto-reseña{
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+.promedio-box{
+
+    background: #111;
+
+    border: 2px solid gold;
+
+    color: gold;
+
+    padding: 15px 25px;
+
+    border-radius: 15px;
+
+    display: inline-block;
+
+    margin-bottom: 25px;
+
+    font-size: 24px;
+
+    font-weight: bold;
+}
+
+.promedio-box span{
+
+    display: block;
+
+    color: white;
+
+    font-size: 14px;
+
+    margin-top: 5px;
+}
+
+.plataformas{
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+
+.tag-plataforma{
+
+    background: #111;
+
+    border: 2px solid #00ffe1;
+
+    color: white;
+
+    padding: 10px 15px;
+
+    border-radius: 20px;
+}
+
+.boton-eliminar{
+
+    display: inline-block;
+
+    margin-top: 5px;
+
+    font-size: 12px;
+
+    color: #ff4d4d;
+
+    text-decoration: none;
+
+    border: 1px solid #ff4d4d;
+
+    padding: 4px 10px;
+
+    border-radius: 8px;
+
+    transition: 0.3s;
+}
+
+.boton-eliminar:hover{
+
+    background: #ff4d4d;
+
+    color: white;
+}
+
+.mensaje-error{
+
+    background: rgba(255,0,0,0.15);
+
+    border: 2px solid red;
+
+    color: #ff8080;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    margin-bottom: 20px;
+
+    font-weight: bold;
+
+    text-align: center;
+}
+
+.modal-imagen{
+
+    display: none;
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: rgba(0,0,0,0.92);
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 9999;
+}
+
+
+.imagen-grande{
+
+    max-width: 85%;
+
+    max-height: 85%;
+
+    border-radius: 20px;
+
+    box-shadow: 0 0 40px cyan;
+}
+
+
+.cerrar-modal{
+
+    position: absolute;
+
+    top: 30px;
+
+    right: 40px;
+
+    font-size: 40px;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+.layout-principal{
+
+    display: flex;
+
+    align-items: flex-start;
+}
+
+
+.sidebar-categorias{
+
+    width: 250px;
+
+    min-height: 100vh;
+
+    background: rgba(10,10,10,0.95);
+
+    border-right: 2px solid cyan;
+
+    padding: 30px;
+}
+
+
+.sidebar-categorias h2{
+
+    color: cyan;
+
+    margin-bottom: 30px;
+
+    font-size: 30px;
+}
+
+
+.sidebar-categorias a{
+
+    display: block;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 14px;
+
+    margin-bottom: 15px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(0,255,255,0.3);
+
+    transition: 0.3s;
+}
+
+
+.sidebar-categorias a:hover{
+
+    background: cyan;
+
+    color: black;
+
+    transform: translateX(5px);
+}
+
+
+.contenido-principal{
+
+    flex: 1;
+
+    padding: 40px;
+}
+
+
+.titulo-categoria{
+
+    text-align: center;
+
+    color: cyan;
+
+    font-size: 50px;
+
+    margin: 40px 0;
+}
+
+.titulo-juego-card{
+
+    font-family: 'Press Start 2P', cursive;
+
+    color: #00ffe7;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    margin-top: 12px;
+
+    text-shadow: 0 0 10px cyan;
+}
+
+.topbar-usuario{
+
+    display: flex;
+
+    justify-content: flex-start;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 20px 40px;
+}
+
+
+.perfil-topbar{
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}
+
+
+.avatar-mini{
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 2px solid cyan;
+}
+
+
+.avatar-default-mini{
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    background: cyan;
+
+    color: black;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-weight: bold;
+}
+
+
+.boton-topbar{
+
+    padding: 12px 20px;
+
+    background: rgba(0,255,255,0.12);
+
+    border: 1px solid cyan;
+
+    border-radius: 12px;
+
+    color: white;
+
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+
+.boton-topbar:hover{
+
+    background: cyan;
+
+    color: black;
+}
+
+.mensaje-container{
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+.mensaje-card{
+
+    background: rgba(15,15,15,0.95);
+
+    padding: 50px;
+
+    border-radius: 20px;
+
+    border: 2px solid cyan;
+
+    text-align: center;
+
+    box-shadow: 0 0 30px cyan;
+}
+
+
+.mensaje-card h1{
+
+    color: cyan;
+
+    margin-bottom: 20px;
+}
+
+
+.mensaje-card p{
+
+    color: white;
+
+    margin-bottom: 30px;
+}
+
+
+.boton-volver{
+
+    padding: 14px 24px;
+
+    background: cyan;
+
+    color: black;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}
+
+.acciones-reseña{
+
+    margin-top: 15px;
+
+}
+
+.boton-like{
+
+    display: inline-block;
+
+    padding: 8px 14px;
+
+    border-radius: 12px;
+
+    border: 2px solid #00ffee;
+
+    color: #00ffee;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+
+    background-color: rgba(0,0,0,0.4);
+
+}
+
+.boton-like:hover{
+
+    background-color: #00ffee;
+
+    color: black;
+
+    box-shadow: 0 0 15px #00ffee;
+
+}
+
+.likes-perfil{
+
+    margin-top: 10px;
+
+    color: #00ffee;
+
+    font-weight: bold;
+}
+
+.offline-body{
+
+    background: black;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    height: 100vh;
+
+    margin: 0;
+
+    font-family: Arial;
+}
+
+.offline-container{
+
+    text-align: center;
+}
+
+.offline-img{
+
+    width: 300px;
+
+    image-rendering: pixelated;
+}
+
+.offline-title{
+
+    color: #ff4da6;
+
+    font-size: 42px;
+
+    text-shadow: 0 0 20px red;
+}
+
+.offline-text{
+
+    color: white;
+
+    font-size: 20px;
+
+    margin-top: 10px;
+}
+
+.offline-button{
+
+    margin-top: 30px;
+
+    background: #ff4da6;
+
+    color: white;
+
+    border: none;
+
+    padding: 15px 35px;
+
+    border-radius: 12px;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.offline-button:hover{
+
+    transform: scale(1.08);
+
+    box-shadow: 0 0 25px #ff4da6;
+}

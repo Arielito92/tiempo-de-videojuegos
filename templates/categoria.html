@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>{{ genero }}</title>
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="topbar-usuario">
+
+{% if usuario %}
+
+    <a
+    href="/usuario/{{ usuario }}"
+    class="perfil-topbar">
+
+        {% if foto_usuario %}
+
+        <img
+        src="{{ url_for('static', filename='uploads/' + foto_usuario) }}"
+        class="avatar-mini">
+
+        {% else %}
+
+        <div class="avatar-default-mini">
+
+            {{ usuario[0] }}
+
+        </div>
+
+        {% endif %}
+
+        <span>
+
+            {{ usuario }}
+
+        </span>
+
+    </a>
+
+    <a
+    href="/logout"
+    class="boton-topbar">
+
+        Cerrar sesión
+
+    </a>
+
+{% else %}
+
+    <a
+    href="/login"
+    class="boton-topbar">
+
+        Iniciar sesión
+
+    </a>
+
+    <a
+    href="/registro"
+    class="boton-topbar">
+
+        Crear cuenta
+
+    </a>
+
+{% endif %}
+
+</div>
+
+<div class="layout-principal">
+
+    <div class="sidebar-categorias">
+
+        <h2>
+
+            🎮 Categorías
+
+        </h2>
+
+        <a href="/categoria/populares">
+
+            🔥 Populares
+
+        </a>
+
+        <a href="/categoria/action">
+
+            ⚔ Acción
+
+        </a>
+
+        <a href="/categoria/role-playing-games-rpg">
+
+            🧙 RPG
+
+        </a>
+
+        <a href="/categoria/shooter">
+
+            🔫 Shooter
+
+        </a>
+
+        <a href="/categoria/adventure">
+
+            🌍 Aventura
+
+        </a>
+
+        <a href="/categoria/indie">
+
+            💎 Indie
+
+        </a>
+
+        <a href="/categoria/horror">
+
+            👻 Terror
+
+        </a>
+
+        <a href="/categoria/sports">
+
+            ⚽ Deportes
+
+        </a>
+
+    </div>
+
+    <div class="contenido-principal">
+
+        <div class="buscador-container">
+
+            <h1 class="titulo-categoria">
+
+                {{ genero }}
+
+            </h1>
+
+            <form class="busqueda-form" action="/buscar">
+
+            <input
+                class="busqueda-input"
+                type="text"
+                name="q"
+
+                placeholder="Buscar videojuegos..."
+            >
+
+            <button class="busqueda-boton">
+
+                Buscar
+
+            </button>
+
+        </form>
+        </div>
+
+        <div class="games-container">
+
+            {% for juego in juegos %}
+
+            <div class="juego-card">
+
+                <a href="/juego/{{ juego.id }}">
+
+                    <img
+                    src="{{ juego.background_image }}"
+                    class="game-image">
+
+                    <h3 
+                    class="titulo-juego-card">
+
+                            {{ juego.name }}
+
+                    </h3>
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

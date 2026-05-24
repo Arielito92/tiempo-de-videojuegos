@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <title>Tiempo de Videojuegos</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="hero">
+
+    <div class="hero-overlay">
+
+        <h1 class="hero-titulo">
+            TIEMPO DE VIDEOJUEGOS
+        </h1>
+
+        <p class="hero-subtitulo">
+
+            Descubre, califica y comparte
+            tus videojuegos favoritos
+
+        </p>
+
+    </div>
+
+</div>
+
+<div class="usuario-panel">
+
+{% if session["usuario"] %}
+
+<div class="usuario-info">
+
+    <a href="/usuario/{{ session['usuario'] }}">
+
+    {% if foto_usuario %}
+
+<img
+src="/static/uploads/{{ foto_usuario }}"
+class="avatar-mini">
+
+{% else %}
+
+<div class="avatar-mini-letra">
+
+    {{ session["usuario"][0] }}
+
+</div>
+
+{% endif %}
+
+</a>
+
+    <p class="usuario-nombre">
+
+        {{ session["usuario"] }}
+
+    </p>
+
+</div>
+
+<a href="/logout" class="usuario-boton">
+    Cerrar sesión
+</a>
+
+{% else %}
+
+<a href="/login" class="usuario-boton">
+    Iniciar sesión
+</a>
+
+<a href="/registro" class="usuario-boton">
+    Crear cuenta
+</a>
+
+{% endif %}
+
+</div>
+
+</a>
+
+    <div class="layout-principal">
+
+    <div class="sidebar-categorias">
+
+        <h2>
+
+            🎮 Categorías
+
+        </h2>
+
+        <a href="/categoria/populares">
+
+            🔥 Populares
+
+        </a>
+
+        <a href="/categoria/action">
+
+            ⚔ Acción
+
+        </a>
+
+        <a href="/categoria/role-playing-games-rpg">
+
+            🧙 RPG
+
+        </a>
+
+        <a href="/categoria/shooter">
+
+            🔫 Shooter
+
+        </a>
+
+        <a href="/categoria/adventure">
+
+            🌍 Aventura
+
+        </a>
+
+        <a href="/categoria/indie">
+
+            💎 Indie
+
+        </a>
+
+        <a href="/categoria/horror">
+
+            👻 Terror
+
+        </a>
+
+        <a href="/categoria/sports">
+
+            ⚽ Deportes
+
+        </a>
+
+    </div>
+
+    <div class="contenido-principal">
+
+    <p>Busca y califica videojuegos</p>
+
+    <form class="busqueda-form" action="/buscar">
+
+    <input
+        class="busqueda-input"
+        type="text"
+        name="q"
+
+        placeholder="Buscar videojuegos..."
+    >
+
+    <button class="busqueda-boton">
+
+        Buscar
+
+    </button>
+
+</form>
+
+  <h2>Resultados</h2>
+
+{% if juegos %}
+
+<h2 class="categoria-titulo">
+    🔎 Resultados
+</h2>
+
+<div class="populares-grid">
+
+    {% for juego in juegos %}
+
+    <div class="juego-card">
+
+        <a href="/juego/{{ juego.id }}">
+
+            <img src="{{ juego.background_image }}">
+
+            <h3>{{ juego.name }}</h3>
+
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+

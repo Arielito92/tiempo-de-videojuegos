@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Login</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <h1>Iniciar sesión</h1>
+
+    <form action="/login" method="POST" class="search-box">
+
+        <input type="text"
+               name="nombre"
+               placeholder="Usuario">
+
+        <br><br>
+
+        <input type="password"
+               name="contraseña"
+               placeholder="Contraseña">
+
+        <br><br>
+
+        <button type="submit">
+            Entrar
+        </button>
+
+    </form>
+
+</body>
+
+</html>

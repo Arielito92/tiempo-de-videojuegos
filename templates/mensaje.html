@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>{{ titulo }}</title>
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="mensaje-container">
+
+    <div class="mensaje-card">
+
+        <h1>
+
+            {{ titulo }}
+
+        </h1>
+
+        <p>
+
+            {{ mensaje }}
+
+        </p>
+
+        <a href="/" class="boton-volver">
+
+            Volver al inicio
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>{{ juego.name }}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+
+    <div class="pagina-juego">
+
+    <div class="columna-izquierda">
+
+        <img
+        src="{{ juego.background_image }}"
+        class="portada-juego">
+
+        <form action="/agregar_favorito/{{ juego.id }}">
+
+            <button class="boton-favorito">
+
+                ❤️ Agregar a favoritos
+
+            </button>
+
+        </form>
+
+        <div class="generos">
+
+            {% for genero in juego.genres %}
+
+            <span class="tag-genero">
+
+                {{ genero.name }}
+
+            </span>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <div class="columna-derecha">
+
+        <h1 class="titulo-juego">
+
+             {{ juego.name }}
+
+        </h1>
+
+        {% if promedio[0] %}
+
+        <div class="promedio-box">
+
+            ⭐ {{ "%.1f"|format(promedio[0]) }}/10
+
+            <span>
+
+                Basado en {{ promedio[1] }} reseñas
+
+            </span>
+
+        </div>
+
+        {% endif %}
+
+
+        <p class="descripcion-juego">
+
+            {{ descripcion }}
+
+        </p>
+
+<div class="plataformas">
+
+    {% for plataforma in juego.platforms %}
+
+    <span class="tag-plataforma">
+
+        {{ plataforma.platform.name }}
+
+    </span>
+
+    {% endfor %}
+
+</div>
+
+        <div class="screenshots-grid">
+
+            {% for imagen in screenshots %}
+
+            <img
+            src="{{ imagen.image }}"
+            class="screenshot"
+            onclick="abrirImagen('{{ imagen.image }}')">
+
+            {% endfor %}
+
+        </div>
+
+        <div class="seccion-reseñas">
+
+            <h2 class="titulo-reseñas">
+
+                ⭐ Reseñas de usuarios
+
+            </h2>
+
+            <form
+            action="/guardar_reseña"
+            method="POST"
+            class="form-reseña">
+
+                <input
+                type="hidden"
+                name="juego_id"
+                value="{{ juego.id }}">
+
+                <input
+                type="number"
+                name="nota"
+                step="0.1"
+                placeholder="Nota del 1 al 10"
+                min="1"
+                max="10"
+                required>
+
+                <textarea
+                name="comentario"
+                placeholder="Escribe tu reseña..."
+                required></textarea>
+
+                <button type="submit">
+
+                    Publicar reseña
+
+                </button>
+
+            </form>
+
+            {% for reseña in reseñas %}
+
+            <div class="card-reseña">
+
+
+                <div class="reseña-top">
+
+                    <a
+                    href="/usuario/{{ reseña[1] }}"
+                    class="usuario-reseña">
+
+                        <div class="avatar-reseña">
+
+                        {% if reseña[4] %}
+
+                        <img
+                        src="/static/uploads/{{ reseña[4] }}"
+                        class="foto-reseña">
+
+                        {% else %}
+
+                        {{ reseña[1][0] }}
+
+                        {% endif %}
+
+                        </div>
+
+                        <div class="acciones-reseña">
+
+                            <a
+                            href="/like/{{ reseña[0] }}"
+                            class="boton-like">
+
+                                👍 {{ reseña[5] }}
+
+                            </a>
+
+                        </div>
+
+                        <span>
+
+                           {{ reseña[1] }}
+
+                        </span>
+
+                        {% if session["usuario"] == reseña[1] %}
+
+                        <a
+                        href="/borrar_resena/{{ reseña[0] }}"
+                        class="boton-eliminar">
+
+                            Eliminar reseña
+
+                        </a>
+
+                        {% endif %}
+
+                    </a>
+
+                    <div class="nota-reseña">
+
+                        ⭐ {{ reseña[2] }}/10
+
+                    </div>
+
+                </div>
+
+                <p class="texto-reseña">
+
+                    
+
+                    {{ reseña[3] }}
+
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<div
+id="modal-imagen"
+class="modal-imagen">
+
+    <span
+    class="cerrar-modal"
+    onclick="cerrarImagen()">
+
+        ✕
+
+    </span>
+
+    <img
+    id="imagen-grande"
+    class="imagen-grande">
+
+</div>
+
+<script>
+
+function abrirImagen(src){
+
+    document.getElementById("modal-imagen").style.display = "flex"
+
+    document.getElementById("imagen-grande").src = src
+}
+
+function cerrarImagen(){
+
+    document.getElementById("modal-imagen").style.display = "none"
+}
+
+</script>
+
+</body>
+
+</html>

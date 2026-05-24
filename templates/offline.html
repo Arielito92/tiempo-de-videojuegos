@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Sin conexión</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="offline-body">
+
+    <div class="offline-container">
+
+        <img
+        src="{{ url_for('static', filename='offline/natsuki.png') }}"
+        class="offline-img">
+
+        <h1 class="offline-title">
+
+            No tienes conexión a internet, tonto.
+
+        </h1>
+
+        <p class="offline-text">
+
+            Revisa tu conexión e intenta otra vez.
+
+        </p>
+
+        <button
+        onclick="window.location.reload()"
+        class="offline-button">
+
+            Reintentar
+
+        </button>
+
+    </div>
+
+</body>
+
+</html>
