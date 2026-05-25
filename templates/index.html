@@ -156,55 +156,97 @@ class="avatar-mini">
 
     <form class="busqueda-form" action="/buscar">
 
-    <input
-        class="busqueda-input"
-        type="text"
-        name="q"
+        <input
+            class="busqueda-input"
+            type="text"
+            name="q"
+            placeholder="Buscar videojuegos..."
+        >
 
-        placeholder="Buscar videojuegos..."
-    >
+        <button class="busqueda-boton">
 
-    <button class="busqueda-boton">
+            Buscar
 
-        Buscar
+        </button>
 
-    </button>
+    </form>
 
-</form>
+    {% if not juegos %}
 
-  <h2>Resultados</h2>
+    <h2 class="titulo-categoria">
 
-{% if juegos %}
+        🎮 Juegos sugeridos
 
-<h2 class="categoria-titulo">
-    🔎 Resultados
-</h2>
+    </h2>
 
-<div class="populares-grid">
 
-    {% for juego in juegos %}
+    <div class="populares-grid">
 
-    <div class="juego-card">
+    {% for juego in juegos_sugeridos %}
 
-        <a href="/juego/{{ juego.id }}">
+        <a
+        href="/juego/{{ juego.id }}"
+        class="juego-card">
 
-            <img src="{{ juego.background_image }}">
+            <img
+            src="{{ juego.background_image }}"
+            class="juego_imagen">
 
-            <h3>{{ juego.name }}</h3>
+            <h3 class="juego_titulo">
+
+                {{ juego.name }}
+
+            </h3>
 
         </a>
 
-    </div>
-
     {% endfor %}
 
+    </div>
+
+    {% endif %}
+
+    {% if juegos %}
+
+    <h2 class="categoria-titulo">
+
+        🔎 Resultados
+
+    </h2>
+
+    <div class="populares-grid">
+
+        {% for juego in juegos %}
+
+        <div class="juego-card">
+
+            <a href="/juego/{{ juego.id }}">
+
+                <img src="{{ juego.background_image }}">
+
+                <h3>{{ juego.name }}</h3>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
 </div>
 
-{% endif %}
+<script>
 
-</div>
+if ("serviceWorker" in navigator) {
 
-</div>
+    navigator.serviceWorker.register("/service-worker.js");
+
+}
+
+</script>
 
 </body>
 

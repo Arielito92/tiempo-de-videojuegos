@@ -1779,3 +1779,26 @@ body {
 
     box-shadow: 0 0 25px #ff4da6;
 }
+
+.mensaje-error {
+
+    width: 400px;
+
+    margin: 20px auto;
+
+    background-color: #ff1e56;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    box-shadow: 0px 0px 15px #ff1e56;
+}

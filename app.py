@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, send_from_directory
 import requests
 import sqlite3
 import os
+import random
 from werkzeug.utils import secure_filename
 from googletrans import Translator
 from requests.exceptions import ConnectionError
@@ -19,6 +20,14 @@ def inicio():
 
     url_populares = f"https://api.rawg.io/api/games?key={API_KEY}&ordering=-added&page_size=16"
 
+    pagina_random_1 = random.randint(1, 5)
+
+    pagina_random_2 = random.randint(6, 10)
+
+    url_sugeridos_1 = f"https://api.rawg.io/api/games?key={API_KEY}&page={pagina_random_1}&page_size=40"
+
+    url_sugeridos_2 = f"https://api.rawg.io/api/games?key={API_KEY}&page={pagina_random_2}&page_size=40"
+
     try:
 
         respuesta_populares = requests.get(url_populares)
@@ -30,6 +39,22 @@ def inicio():
     datos_populares = respuesta_populares.json()
 
     juegos_populares = datos_populares["results"]
+
+    respuesta_sugeridos_1 = requests.get(url_sugeridos_1)
+
+    respuesta_sugeridos_2 = requests.get(url_sugeridos_2)
+
+    datos_sugeridos_1 = respuesta_sugeridos_1.json()
+
+    datos_sugeridos_2 = respuesta_sugeridos_2.json()
+
+    juegos_sugeridos = (
+    datos_sugeridos_1["results"]
+    +
+    datos_sugeridos_2["results"]
+)
+
+    random.shuffle(juegos_sugeridos)
 
     url_accion = f"https://api.rawg.io/api/games?key={API_KEY}&genres=action&page_size=8"
 
@@ -73,6 +98,7 @@ def inicio():
     return render_template(
         "index.html", 
         juegos_populares=juegos_populares,
+        juegos_sugeridos=juegos_sugeridos,
         usuario=usuario,
         accion=accion,
         rpg=rpg,
@@ -336,10 +362,10 @@ def guardar_usuario():
 
      conexion.close()
 
-    return render_template(
-    "registro.html",
-    error="Ese usuario ya existe"
-)
+     return render_template(
+     "registro.html",
+     error="Ese usuario ya existe"
+     )
 
     cursor.execute(
     """
@@ -390,7 +416,10 @@ def verificar_login():
 
     else:
 
-        return "Usuario o contraseña incorrectos"
+        return render_template(
+            "login.html",
+            error="Usuario o contraseña incorrectos"
+        )
 
 @app.route("/guardar_reseña", methods=["POST"])
 def guardar_reseña():
@@ -729,6 +758,19 @@ def subir_foto():
         conexion.close()
 
     return redirect(f"/usuario/{session['usuario']}")
+
+@app.route("/offline")
+def offline():
+
+ return render_template("offline.html")
+
+@app.route("/service-worker.js")
+def service_worker():
+
+    return send_from_directory(
+        ".",
+        "service-worker.js"
+    )
 
 if __name__ == "__main__":
 

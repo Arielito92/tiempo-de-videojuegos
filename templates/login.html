@@ -12,6 +12,16 @@
 
 <body>
 
+    {% if error %}
+
+    <div class="mensaje-error">
+
+       {{ error }}
+
+    </div>
+
+    {% endif %}
+
     <h1>Iniciar sesión</h1>
 
     <form action="/login" method="POST" class="search-box">
