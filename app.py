@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, send_from_directory
 import requests
-import sqlite3
 import psycopg2
 import os
 import random
@@ -23,7 +22,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
     id SERIAL PRIMARY KEY,
     nombre TEXT,
-    contraseña TEXT,
+    password TEXT,
     foto TEXT
 
 )
@@ -49,6 +48,18 @@ CREATE TABLE IF NOT EXISTS favoritos (
     usuario TEXT,
     juego_id TEXT
 
+)
+""")           
+             
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS likes (
+
+    id SERIAL PRIMARY KEY,
+    usuario TEXT,
+    reseña_id INTEGER
+
+
+               
 )
 """)
 
@@ -135,7 +146,7 @@ def inicio():
         """
         SELECT foto
         FROM usuarios
-        WHERE nombre = ?
+        WHERE nombre = %s
         """,
         (session["usuario"],)
     )
@@ -179,7 +190,7 @@ def categoria(genero):
             """
             SELECT foto
             FROM usuarios
-            WHERE nombre = ?
+            WHERE nombre = %s
             """,
             (usuario,)
         )
@@ -264,7 +275,7 @@ def buscar():
             """
             SELECT foto
             FROM usuarios
-            WHERE nombre = ?
+            WHERE nombre = %s
             """,
             (usuario,)
         )
@@ -336,7 +347,7 @@ def juego(id_juego):
 
    screenshots = datos_screenshots["results"]
 
-   conexion: sqlite3.Connection = psycopg2.connect(
+   conexion = psycopg2.connect(
     os.getenv("DATABASE_URL")
    )
 
@@ -360,7 +371,7 @@ def juego(id_juego):
     LEFT JOIN likes
     ON reseñas.id = likes.reseña_id
 
-    WHERE juego_id = ?
+    WHERE juego_id = %s
 
     GROUP BY reseñas.id
     """,
@@ -374,7 +385,7 @@ def juego(id_juego):
 
     FROM reseñas
 
-    WHERE juego_id = ?
+    WHERE juego_id = %s
     """,
     (id_juego,)
 )
@@ -404,7 +415,7 @@ def guardar_usuario():
 
     nombre = request.form.get("nombre")
 
-    contraseña = request.form.get("contraseña")
+    password = request.form.get("password")
 
     conexion = psycopg2.connect(
     os.getenv("DATABASE_URL")
@@ -413,7 +424,7 @@ def guardar_usuario():
     cursor = conexion.cursor()
 
     cursor.execute(
-    "SELECT * FROM usuarios WHERE nombre = ?",
+    "SELECT * FROM usuarios WHERE nombre = %s",
     (nombre,)
 )
 
@@ -431,11 +442,11 @@ def guardar_usuario():
     cursor.execute(
     """
     INSERT INTO usuarios
-    (nombre, contraseña, foto)
+    (nombre, password, foto)
 
-    VALUES (?, ?, ?)
+    VALUES (%s, %s, %s)
     """,
-    (nombre, contraseña, None)
+    (nombre, password, None)
 )
 
     conexion.commit()
@@ -454,7 +465,7 @@ def verificar_login():
 
     nombre = request.form.get("nombre")
 
-    contraseña = request.form.get("contraseña")
+    password = request.form.get("password")
 
     conexion = psycopg2.connect(
     os.getenv("DATABASE_URL")
@@ -463,8 +474,8 @@ def verificar_login():
     cursor = conexion.cursor()
 
     cursor.execute(
-        "SELECT * FROM usuarios WHERE nombre = ? AND contraseña = ?",
-        (nombre, contraseña)
+        "SELECT * FROM usuarios WHERE nombre = %s AND password = %s",
+        (nombre, password)
     )
 
     usuario = cursor.fetchone()
@@ -483,7 +494,7 @@ def verificar_login():
 
         return render_template(
             "login.html",
-            error="Usuario o contraseña incorrectos"
+            error="Usuario o password incorrectos"
         )
     
 @app.route("/cambiar_nombre", methods=["POST"])
@@ -507,7 +518,7 @@ def cambiar_nombre():
         """
         SELECT *
         FROM usuarios
-        WHERE nombre = ?
+        WHERE nombre = %s
         """,
         (nombre_nuevo,)
     )
@@ -523,8 +534,8 @@ def cambiar_nombre():
     cursor.execute(
         """
         UPDATE usuarios
-        SET nombre = ?
-        WHERE nombre = ?
+        SET nombre = %s
+        WHERE nombre = %s
         """,
         (nombre_nuevo, nombre_actual)
     )
@@ -532,8 +543,8 @@ def cambiar_nombre():
     cursor.execute(
         """
         UPDATE reseñas
-        SET usuario = ?
-        WHERE usuario = ?
+        SET usuario = %s
+        WHERE usuario = %s
         """,
         (nombre_nuevo, nombre_actual)
     )
@@ -541,8 +552,8 @@ def cambiar_nombre():
     cursor.execute(
         """
         UPDATE favoritos
-        SET usuario = ?
-        WHERE usuario = ?
+        SET usuario = %s
+        WHERE usuario = %s
         """,
         (nombre_nuevo, nombre_actual)
     )
@@ -550,8 +561,8 @@ def cambiar_nombre():
     cursor.execute(
         """
         UPDATE likes
-        SET usuario = ?
-        WHERE usuario = ?
+        SET usuario = %s
+        WHERE usuario = %s
         """,
         (nombre_nuevo, nombre_actual)
     )
@@ -594,8 +605,8 @@ def guardar_reseña():
         SELECT *
         FROM reseñas
 
-        WHERE usuario = ?
-        AND juego_id = ?
+        WHERE usuario = %s
+        AND juego_id = %s
         """,
         (usuario, juego_id)
     )
@@ -613,7 +624,7 @@ def guardar_reseña():
         INSERT INTO reseñas
         (juego_id, usuario, nota, comentario)
 
-        VALUES (?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s)
         """,
         (juego_id, usuario, nota, comentario)
     )
@@ -649,8 +660,8 @@ def like_resena(resena_id):
         SELECT *
         FROM likes
 
-        WHERE usuario = ?
-        AND reseña_id = ?
+        WHERE usuario = %s
+        AND reseña_id = %s
         """,
         (usuario, resena_id)
     )
@@ -664,8 +675,8 @@ def like_resena(resena_id):
             """
             DELETE FROM likes
 
-            WHERE usuario = ?
-            AND reseña_id = ?
+            WHERE usuario = %s
+            AND reseña_id = %s
             """,
             (usuario, resena_id)
         )
@@ -677,7 +688,7 @@ def like_resena(resena_id):
             INSERT INTO likes
             (usuario, reseña_id)
 
-            VALUES (?, ?)
+            VALUES (%s, %s)
             """,
             (usuario, resena_id)
         )
@@ -708,7 +719,7 @@ def api_like(resena_id):
         """
         UPDATE reseñas
         SET likes = likes + 1
-        WHERE id = ?
+        WHERE id = %s
         """,
         (resena_id,)
     )
@@ -719,7 +730,7 @@ def api_like(resena_id):
         """
         SELECT likes
         FROM reseñas
-        WHERE id = ?
+        WHERE id = %s
         """,
         (resena_id,)
     )
@@ -742,7 +753,7 @@ def borrar_resena(id_resena):
     cursor = conexion.cursor()
 
     cursor.execute(
-        "DELETE FROM reseñas WHERE id = ?",
+        "DELETE FROM reseñas WHERE id = %s",
         (id_resena,)
     )
 
@@ -778,7 +789,7 @@ def perfil_usuario(nombre):
     """
     SELECT foto
     FROM usuarios
-    WHERE nombre = ?
+    WHERE nombre = %s
     """,
     (usuario,)
 )
@@ -787,7 +798,9 @@ def perfil_usuario(nombre):
 
     foto_usuario = foto[0]
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -803,7 +816,7 @@ def perfil_usuario(nombre):
         LEFT JOIN likes
         ON reseñas.id = likes.reseña_id
 
-        WHERE reseñas.usuario = ?
+        WHERE reseñas.usuario = %s
 
         GROUP BY reseñas.id
         """,
@@ -839,7 +852,7 @@ def perfil_usuario(nombre):
     """
     SELECT juego_id
     FROM favoritos
-    WHERE usuario = ?
+    WHERE usuario = %s
     """,
     (usuario,)
 )
@@ -890,8 +903,8 @@ def agregar_favorito(id_juego):
     """
     SELECT * FROM favoritos
 
-    WHERE usuario = ?
-    AND juego_id = ?
+    WHERE usuario = %s
+    AND juego_id = %s
     """,
     (usuario, id_juego)
 )
@@ -905,8 +918,8 @@ def agregar_favorito(id_juego):
         """
         DELETE FROM favoritos
 
-        WHERE usuario = ?
-        AND juego_id = ?
+        WHERE usuario = %s
+        AND juego_id = %s
         """,
         (usuario, id_juego)
     )
@@ -918,7 +931,7 @@ def agregar_favorito(id_juego):
         INSERT INTO favoritos
         (usuario, juego_id)
 
-        VALUES (?, ?)
+        VALUES (%s, %s)
         """,
         (usuario, id_juego)
     )
@@ -959,8 +972,8 @@ def subir_foto():
         cursor.execute(
             """
             UPDATE usuarios
-            SET foto = ?
-            WHERE nombre = ?
+            SET foto = %s
+            WHERE nombre = %s
             """,
             (
                 nombre_archivo,
