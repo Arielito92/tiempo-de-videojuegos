@@ -425,6 +425,82 @@ def verificar_login():
             "login.html",
             error="Usuario o contraseña incorrectos"
         )
+    
+@app.route("/cambiar_nombre", methods=["POST"])
+def cambiar_nombre():
+
+    if "usuario" not in session:
+
+        return redirect("/login")
+
+    nombre_nuevo = request.form.get("nombre_nuevo")
+
+    nombre_actual = session["usuario"]
+
+    conexion = sqlite3.connect("videojuegos.db")
+
+    cursor = conexion.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM usuarios
+        WHERE nombre = ?
+        """,
+        (nombre_nuevo,)
+    )
+
+    usuario_existente = cursor.fetchone()
+
+    if usuario_existente:
+
+        conexion.close()
+
+        return redirect(f"/usuario/{nombre_actual}")
+
+    cursor.execute(
+        """
+        UPDATE usuarios
+        SET nombre = ?
+        WHERE nombre = ?
+        """,
+        (nombre_nuevo, nombre_actual)
+    )
+
+    cursor.execute(
+        """
+        UPDATE reseñas
+        SET usuario = ?
+        WHERE usuario = ?
+        """,
+        (nombre_nuevo, nombre_actual)
+    )
+
+    cursor.execute(
+        """
+        UPDATE favoritos
+        SET usuario = ?
+        WHERE usuario = ?
+        """,
+        (nombre_nuevo, nombre_actual)
+    )
+
+    cursor.execute(
+        """
+        UPDATE likes
+        SET usuario = ?
+        WHERE usuario = ?
+        """,
+        (nombre_nuevo, nombre_actual)
+    )
+
+    conexion.commit()
+
+    conexion.close()
+
+    session["usuario"] = nombre_nuevo
+
+    return redirect(f"/usuario/{nombre_nuevo}")
 
 @app.route("/guardar_reseña", methods=["POST"])
 def guardar_reseña():
@@ -546,6 +622,75 @@ def like_resena(resena_id):
     conexion.close()
 
     return redirect(request.referrer)
+
+@app.route("/api/like/<int:resena_id>")
+def api_like(resena_id):
+
+    if "usuario" not in session:
+
+        return {"error": "login"}
+
+    usuario = session["usuario"]
+
+    conexion = sqlite3.connect("videojuegos.db")
+
+    cursor = conexion.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM likes
+
+        WHERE usuario = ?
+        AND resena_id = ?
+        """,
+        (usuario, resena_id)
+    )
+
+    like_existente = cursor.fetchone()
+
+    if like_existente:
+
+        cursor.execute(
+            """
+            DELETE FROM likes
+
+            WHERE usuario = ?
+            AND resena_id = ?
+            """,
+            (usuario, resena_id)
+        )
+
+    else:
+
+        cursor.execute(
+            """
+            INSERT INTO likes
+            (usuario, resena_id)
+
+            VALUES (?, ?)
+            """,
+            (usuario, resena_id)
+        )
+
+    conexion.commit()
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+
+        FROM likes
+
+        WHERE resena_id = ?
+        """,
+        (resena_id,)
+    )
+
+    total = cursor.fetchone()[0]
+
+    conexion.close()
+
+    return {"likes": total}
 
 @app.route("/borrar_resena/<int:id_resena>")
 def borrar_resena(id_resena):

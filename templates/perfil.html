@@ -58,6 +58,25 @@ enctype="multipart/form-data">
             {{ usuario }}
         </h1>
 
+        <form
+        action="/cambiar_nombre"
+        method="POST"
+        class="form-cambiar-nombre">
+
+            <input
+            type="text"
+            name="nombre_nuevo"
+            placeholder="Nuevo nombre"
+            required>
+
+            <button type="submit">
+
+                Cambiar nombre
+
+            </button>
+
+        </form>
+
         <div class="stats-perfil">
 
             <div class="stat-box">

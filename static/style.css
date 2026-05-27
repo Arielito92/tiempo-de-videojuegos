@@ -1838,3 +1838,40 @@ body {
 
     background: white;
 }
+
+.form-cambiar-nombre {
+
+    margin-top: 20px;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.form-cambiar-nombre input {
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    border: none;
+
+    background: #1e1e1e;
+
+    color: white;
+}
+
+.form-cambiar-nombre button {
+
+    background: #00ff99;
+
+    border: none;
+
+    padding: 10px 15px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-family: 'Press Start 2P', cursive;
+}
