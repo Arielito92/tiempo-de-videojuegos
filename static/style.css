@@ -1802,3 +1802,39 @@ body {
 
     box-shadow: 0px 0px 15px #ff1e56;
 }
+
+.boton-home {
+
+    position: fixed;
+
+    top: 20px;
+
+    right: 20px;
+
+    background: #00ff99;
+
+    color: black;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: 10px;
+
+    z-index: 9999;
+
+    box-shadow: 0 0 15px #00ff99;
+
+    transition: 0.3s;
+}
+
+.boton-home:hover {
+
+    transform: scale(1.05);
+
+    background: white;
+}

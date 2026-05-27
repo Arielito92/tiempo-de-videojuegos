@@ -3,6 +3,7 @@ import requests
 import sqlite3
 import os
 import random
+from datetime import timedelta
 from werkzeug.utils import secure_filename
 from googletrans import Translator
 from requests.exceptions import ConnectionError
@@ -10,6 +11,8 @@ from requests.exceptions import ConnectionError
 app = Flask(__name__)
 
 app.secret_key = "videojuegos_secret"
+
+app.permanent_session_lifetime = timedelta(days=30)
 
 API_KEY = "00276b692ecb452f99138a74a2fcc579"
 
@@ -410,6 +413,8 @@ def verificar_login():
 
     if usuario:
 
+        session.permanent = True
+
         session["usuario"] = nombre
 
         return redirect("/")
@@ -444,7 +449,24 @@ def guardar_reseña():
 
     cursor = conexion.cursor()
 
+    cursor.execute(
+        """
+        SELECT *
+        FROM reseñas
 
+        WHERE usuario = ?
+        AND juego_id = ?
+        """,
+        (usuario, juego_id)
+    )
+
+    reseña_existente = cursor.fetchone()
+
+    if reseña_existente:
+
+        conexion.close()
+
+        return redirect(f"/juego/{juego_id}")
 
     cursor.execute(
         """
@@ -557,7 +579,7 @@ def perfil_usuario(nombre):
 
         return redirect("/login")
 
-    usuario = session["usuario"]
+    usuario = nombre
 
     conexion = sqlite3.connect("videojuegos.db")
 
