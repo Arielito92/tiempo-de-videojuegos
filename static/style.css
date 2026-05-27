@@ -1875,3 +1875,79 @@ body {
 
     font-family: 'Press Start 2P', cursive;
 }
+
+.perfil-link{
+
+    text-decoration: none;
+
+    color: #00ff99;
+
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: 10px;
+}
+
+.acciones-perfil{
+
+    display: flex;
+
+    gap: 15px;
+
+    margin-top: 15px;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+}
+
+.form-cambiar-nombre{
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.form-cambiar-nombre input{
+
+    background: #111;
+
+    border: 2px solid #00ff99;
+
+    color: white;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: 8px;
+
+    width: 180px;
+}
+
+.form-cambiar-nombre button{
+
+    background: #00ff99;
+
+    color: black;
+
+    border: none;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-family: 'Press Start 2P', cursive;
+
+    transition: 0.2s;
+}
+
+.form-cambiar-nombre button:hover{
+
+    transform: scale(1.05);
+
+    background: #00cc77;
+}

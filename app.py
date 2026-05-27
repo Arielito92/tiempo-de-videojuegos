@@ -7,6 +7,7 @@ from datetime import timedelta
 from werkzeug.utils import secure_filename
 from googletrans import Translator
 from requests.exceptions import ConnectionError
+from flask import jsonify
 
 app = Flask(__name__)
 
@@ -628,9 +629,9 @@ def api_like(resena_id):
 
     if "usuario" not in session:
 
-        return {"error": "login"}
-
-    usuario = session["usuario"]
+        return jsonify({
+            "error": True
+        })
 
     conexion = sqlite3.connect("videojuegos.db")
 
@@ -638,59 +639,31 @@ def api_like(resena_id):
 
     cursor.execute(
         """
-        SELECT *
-        FROM likes
-
-        WHERE usuario = ?
-        AND resena_id = ?
+        UPDATE reseñas
+        SET likes = likes + 1
+        WHERE id = ?
         """,
-        (usuario, resena_id)
+        (resena_id,)
     )
-
-    like_existente = cursor.fetchone()
-
-    if like_existente:
-
-        cursor.execute(
-            """
-            DELETE FROM likes
-
-            WHERE usuario = ?
-            AND resena_id = ?
-            """,
-            (usuario, resena_id)
-        )
-
-    else:
-
-        cursor.execute(
-            """
-            INSERT INTO likes
-            (usuario, resena_id)
-
-            VALUES (?, ?)
-            """,
-            (usuario, resena_id)
-        )
 
     conexion.commit()
 
     cursor.execute(
         """
-        SELECT COUNT(*)
-
-        FROM likes
-
-        WHERE resena_id = ?
+        SELECT likes
+        FROM reseñas
+        WHERE id = ?
         """,
         (resena_id,)
     )
 
-    total = cursor.fetchone()[0]
+    likes = cursor.fetchone()[0]
 
     conexion.close()
 
-    return {"likes": total}
+    return jsonify({
+        "likes": likes
+    })
 
 @app.route("/borrar_resena/<int:id_resena>")
 def borrar_resena(id_resena):
