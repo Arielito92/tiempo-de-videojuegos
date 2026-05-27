@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, send_from_directory
 import requests
 import sqlite3
+import psycopg2
 import os
 import random
 from datetime import timedelta
@@ -10,6 +11,52 @@ from requests.exceptions import ConnectionError
 from flask import jsonify
 
 app = Flask(__name__)
+
+conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+)
+
+cursor = conexion.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS usuarios (
+
+    id SERIAL PRIMARY KEY,
+    nombre TEXT,
+    contraseña TEXT,
+    foto TEXT
+
+)
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS reseñas (
+
+    id SERIAL PRIMARY KEY,
+    juego_id TEXT,
+    usuario TEXT,
+    nota REAL,
+    comentario TEXT,
+    likes INTEGER DEFAULT 0
+
+)
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS favoritos (
+
+    id SERIAL PRIMARY KEY,
+    usuario TEXT,
+    juego_id TEXT
+
+)
+""")
+
+conexion.commit()
+
+conexion.close()
+
+app.config["SESSION_PERMANENT"] = True
 
 app.secret_key = "videojuegos_secret"
 
@@ -78,7 +125,9 @@ def inicio():
 
     if "usuario" in session:
 
-     conexion = sqlite3.connect("videojuegos.db")
+     conexion = psycopg2.connect(
+     os.getenv("DATABASE_URL")
+     )
 
      cursor = conexion.cursor()
 
@@ -120,7 +169,9 @@ def categoria(genero):
 
     if usuario:
 
-        conexion = sqlite3.connect("videojuegos.db")
+        conexion = psycopg2.connect(
+        os.getenv("DATABASE_URL")
+        )
 
         cursor = conexion.cursor()
 
@@ -203,7 +254,9 @@ def buscar():
 
     if usuario:
 
-        conexion = sqlite3.connect("videojuegos.db")
+        conexion = psycopg2.connect(
+        os.getenv("DATABASE_URL")
+     )
 
         cursor = conexion.cursor()
 
@@ -283,7 +336,9 @@ def juego(id_juego):
 
    screenshots = datos_screenshots["results"]
 
-   conexion: sqlite3.Connection = sqlite3.connect("videojuegos.db")
+   conexion: sqlite3.Connection = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+   )
 
    cursor = conexion.cursor()
 
@@ -351,7 +406,9 @@ def guardar_usuario():
 
     contraseña = request.form.get("contraseña")
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -399,7 +456,9 @@ def verificar_login():
 
     contraseña = request.form.get("contraseña")
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -438,7 +497,9 @@ def cambiar_nombre():
 
     nombre_actual = session["usuario"]
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -522,7 +583,9 @@ def guardar_reseña():
 
     usuario = session["usuario"]
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -574,7 +637,9 @@ def like_resena(resena_id):
 
     usuario = session["usuario"]
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -633,7 +698,9 @@ def api_like(resena_id):
             "error": True
         })
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -668,7 +735,9 @@ def api_like(resena_id):
 @app.route("/borrar_resena/<int:id_resena>")
 def borrar_resena(id_resena):
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -699,7 +768,9 @@ def perfil_usuario(nombre):
 
     usuario = nombre
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -808,7 +879,9 @@ def agregar_favorito(id_juego):
 
     usuario = session["usuario"]
 
-    conexion = sqlite3.connect("videojuegos.db")
+    conexion = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+    )
 
     cursor = conexion.cursor()
 
@@ -877,7 +950,9 @@ def subir_foto():
 
         archivo.save(ruta)
 
-        conexion = sqlite3.connect("videojuegos.db")
+        conexion = psycopg2.connect(
+        os.getenv("DATABASE_URL")
+        )
 
         cursor = conexion.cursor()
 
