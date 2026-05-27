@@ -29,12 +29,12 @@ CREATE TABLE IF NOT EXISTS usuarios (
 """)
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS reseñas (
+CREATE TABLE IF NOT EXISTS resenas (
 
     id SERIAL PRIMARY KEY,
     juego_id TEXT,
     usuario TEXT,
-    nota REAL,
+    nota FLOAT,
     comentario TEXT,
     likes INTEGER DEFAULT 0
 
@@ -355,25 +355,19 @@ def juego(id_juego):
 
    cursor.execute(
     """
-    SELECT reseñas.id,
-           reseñas.usuario,
-           reseñas.nota,
-           reseñas.comentario,
+    SELECT resenas.id,
+           resenas.usuario,
+           resenas.nota,
+           resenas.comentario,
            usuarios.foto,
+           resenas.likes
 
-           COUNT(likes.id)
-
-    FROM reseñas
+    FROM resenas
 
     LEFT JOIN usuarios
-    ON reseñas.usuario = usuarios.nombre
-
-    LEFT JOIN likes
-    ON reseñas.id = likes.reseña_id
+    ON resenas.usuario = usuarios.nombre
 
     WHERE juego_id = %s
-
-    GROUP BY reseñas.id
     """,
     (id_juego,)
 )
@@ -383,7 +377,7 @@ def juego(id_juego):
     """
     SELECT AVG(nota), COUNT(*)
 
-    FROM reseñas
+    FROM resenas
 
     WHERE juego_id = %s
     """,
@@ -542,7 +536,7 @@ def cambiar_nombre():
 
     cursor.execute(
         """
-        UPDATE reseñas
+        UPDATE resenas
         SET usuario = %s
         WHERE usuario = %s
         """,
@@ -603,7 +597,7 @@ def guardar_reseña():
     cursor.execute(
         """
         SELECT *
-        FROM reseñas
+        FROM resenas
 
         WHERE usuario = %s
         AND juego_id = %s
@@ -621,7 +615,7 @@ def guardar_reseña():
 
     cursor.execute(
         """
-        INSERT INTO reseñas
+        INSERT INTO resenas
         (juego_id, usuario, nota, comentario)
 
         VALUES (%s, %s, %s, %s)
@@ -796,7 +790,13 @@ def perfil_usuario(nombre):
 
     foto = cursor.fetchone()
 
-    foto_usuario = foto[0]
+    if foto:
+
+     foto_usuario = foto[0]
+
+    else:
+
+     foto_usuario = None
 
     conexion = psycopg2.connect(
     os.getenv("DATABASE_URL")
@@ -805,23 +805,18 @@ def perfil_usuario(nombre):
     cursor = conexion.cursor()
 
     cursor.execute(
-        """
-        SELECT reseñas.juego_id,
-               reseñas.nota,
-               reseñas.comentario,
-               COUNT(likes.id)
+    """
+    SELECT juego_id,
+           nota,
+           comentario,
+           likes
 
-        FROM reseñas
+    FROM resenas
 
-        LEFT JOIN likes
-        ON reseñas.id = likes.reseña_id
-
-        WHERE reseñas.usuario = %s
-
-        GROUP BY reseñas.id
-        """,
-        (usuario,)
-    )
+    WHERE usuario = %s
+    """,
+    (usuario,)
+  )
 
     reseñas_db = cursor.fetchall()
 
