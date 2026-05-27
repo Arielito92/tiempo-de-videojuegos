@@ -31,9 +31,7 @@
 
          {% if foto_usuario %}
 
-         <img
-         src="/static/uploads/{{ foto_usuario }}"
-         class="foto-perfil">
+         <img src="{{ url_for('static', filename='uploads/' + foto_usuario) }}" class="foto-perfil">
 
          {% else %}
 
