@@ -949,17 +949,30 @@ def subir_foto():
 
     if archivo:
 
-        nombre_archivo = secure_filename(archivo.filename)
+        nombre_archivo = secure_filename(
+            archivo.filename
+        )
+
+        carpeta_uploads = os.path.join(
+            app.root_path,
+            "static",
+            "uploads"
+        )
+
+        os.makedirs(
+            carpeta_uploads,
+            exist_ok=True
+        )
 
         ruta = os.path.join(
-            "static/uploads",
+            carpeta_uploads,
             nombre_archivo
         )
 
         archivo.save(ruta)
 
         conexion = psycopg2.connect(
-        os.getenv("DATABASE_URL")
+            os.getenv("DATABASE_URL")
         )
 
         cursor = conexion.cursor()
@@ -980,7 +993,9 @@ def subir_foto():
 
         conexion.close()
 
-    return redirect(f"/usuario/{session['usuario']}")
+    return redirect(
+        f"/usuario/{session['usuario']}"
+    )
 
 @app.route("/offline")
 def offline():
