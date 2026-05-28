@@ -35,7 +35,7 @@
 
          {% else %}
 
-         {{ usuario[0] }}
+         {{ usuario[0].upper() }}
 
          {% endif %}
 
@@ -93,7 +93,7 @@ enctype="multipart/form-data">
 
             <div class="stat-box">
 
-                <h2>{{ reseñas|length }}</h2>
+                <h2>{{ resenas|length }}</h2>
 
                 <p>Reseñas</p>
 
@@ -153,25 +153,25 @@ class="card-favorito">
 
     <div class="perfil-reseñas">
 
-        {% for reseña in reseñas %}
+        {% for resena in resenas %}
 
             <div class="perfil-card">
 
                 <p class="perfil-juego">
-                    {{ reseña[0] }}
+                    {{ resena[0] }}
                 </p>
 
                 <p class="perfil-nota">
-                    ⭐ {{ reseña[1] }}/10
+                    ⭐ {{ resena[1] }}/10
                 </p>
 
                 <p class="perfil-comentario">
-                    {{ reseña[2] }}
+                    {{ resena[2] }}
                 </p>
 
                 <p class="likes-perfil">
 
-                    👍 {{ reseña[3] }} likes
+                    👍 {{ resena[3] }} likes
 
                 </p>
 

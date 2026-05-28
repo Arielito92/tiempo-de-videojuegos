@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 conexion.commit()
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS reseñas (
+CREATE TABLE IF NOT EXISTS resenas (
 
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
@@ -31,7 +31,10 @@ CREATE TABLE IF NOT EXISTS reseñas (
 
     nota REAL,
 
-    comentario TEXT
+    comentario TEXT,
+               
+    likes INTEGER DEFAULT 0          
+               
 
 )
 """)
@@ -61,7 +64,7 @@ cursor.execute(
 
         usuario TEXT,
 
-        reseña_id INTEGER
+        resena_id INTEGER
     )
     """
 )
@@ -71,4 +74,3 @@ conexion.commit()
 conexion.close()
 
 print("Base de datos creada")
-

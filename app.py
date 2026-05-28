@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, send_from_directory
 import requests
-import psycopg2
+import sqlite3
 import os
 import random
 from datetime import timedelta
@@ -11,8 +11,9 @@ from flask import jsonify
 
 app = Flask(__name__)
 
-conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
+conexion = sqlite3.connect(
+    "videojuegos.db",
+    check_same_thread=False
 )
 
 cursor = conexion.cursor()
@@ -22,7 +23,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
     id SERIAL PRIMARY KEY,
     nombre TEXT,
-    password TEXT,
+    contraseña TEXT,
     foto TEXT
 
 )
@@ -136,9 +137,7 @@ def inicio():
 
     if "usuario" in session:
 
-     conexion = psycopg2.connect(
-     os.getenv("DATABASE_URL")
-     )
+     conexion = sqlite3.connect("videojuegos.db")
 
      cursor = conexion.cursor()
 
@@ -146,7 +145,7 @@ def inicio():
         """
         SELECT foto
         FROM usuarios
-        WHERE nombre = %s
+        WHERE nombre = ?
         """,
         (session["usuario"],)
     )
@@ -180,9 +179,7 @@ def categoria(genero):
 
     if usuario:
 
-        conexion = psycopg2.connect(
-        os.getenv("DATABASE_URL")
-        )
+        conexion = sqlite3.connect("videojuegos.db")
 
         cursor = conexion.cursor()
 
@@ -190,7 +187,7 @@ def categoria(genero):
             """
             SELECT foto
             FROM usuarios
-            WHERE nombre = %s
+            WHERE nombre = ?
             """,
             (usuario,)
         )
@@ -265,9 +262,7 @@ def buscar():
 
     if usuario:
 
-        conexion = psycopg2.connect(
-        os.getenv("DATABASE_URL")
-     )
+        conexion = sqlite3.connect("videojuegos.db")
 
         cursor = conexion.cursor()
 
@@ -275,7 +270,7 @@ def buscar():
             """
             SELECT foto
             FROM usuarios
-            WHERE nombre = %s
+            WHERE nombre = ?
             """,
             (usuario,)
         )
@@ -347,9 +342,8 @@ def juego(id_juego):
 
    screenshots = datos_screenshots["results"]
 
-   conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-   )
+   conexion = sqlite3.connect("videojuegos.db")
+   
 
    cursor = conexion.cursor()
 
@@ -367,11 +361,11 @@ def juego(id_juego):
     LEFT JOIN usuarios
     ON resenas.usuario = usuarios.nombre
 
-    WHERE juego_id = %s
+    WHERE juego_id = ?
     """,
     (id_juego,)
 )
-   reseñas = cursor.fetchall()
+   resenas = cursor.fetchall()
 
    cursor.execute(
     """
@@ -379,7 +373,7 @@ def juego(id_juego):
 
     FROM resenas
 
-    WHERE juego_id = %s
+    WHERE juego_id = ?
     """,
     (id_juego,)
 )
@@ -393,7 +387,7 @@ def juego(id_juego):
    return render_template(
     "juego.html",
     juego=juego,
-    reseñas=reseñas,
+    resenas=resenas,
     screenshots=screenshots,
     trailer=trailer,
     promedio=promedio,
@@ -409,16 +403,15 @@ def guardar_usuario():
 
     nombre = request.form.get("nombre")
 
-    password = request.form.get("password")
+    contraseña = request.form.get("contraseña")
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    conexion = sqlite3.connect("videojuegos.db")
+    
 
     cursor = conexion.cursor()
 
     cursor.execute(
-    "SELECT * FROM usuarios WHERE nombre = %s",
+    "SELECT * FROM usuarios WHERE nombre = ?",
     (nombre,)
 )
 
@@ -436,11 +429,11 @@ def guardar_usuario():
     cursor.execute(
     """
     INSERT INTO usuarios
-    (nombre, password, foto)
+    (nombre, contraseña, foto)
 
-    VALUES (%s, %s, %s)
+    VALUES (?, ?, ?)
     """,
-    (nombre, password, None)
+    (nombre, contraseña, None)
 )
 
     conexion.commit()
@@ -459,17 +452,16 @@ def verificar_login():
 
     nombre = request.form.get("nombre")
 
-    password = request.form.get("password")
+    contraseña = request.form.get("contraseña")
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    conexion = sqlite3.connect("videojuegos.db")
+    
 
     cursor = conexion.cursor()
 
     cursor.execute(
-        "SELECT * FROM usuarios WHERE nombre = %s AND password = %s",
-        (nombre, password)
+        "SELECT * FROM usuarios WHERE nombre = ? AND contraseña = ?",
+        (nombre, contraseña)
     )
 
     usuario = cursor.fetchone()
@@ -488,7 +480,7 @@ def verificar_login():
 
         return render_template(
             "login.html",
-            error="Usuario o password incorrectos"
+            error="Usuario o contraseña incorrectos"
         )
     
 @app.route("/cambiar_nombre", methods=["POST"])
@@ -502,9 +494,8 @@ def cambiar_nombre():
 
     nombre_actual = session["usuario"]
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    conexion = sqlite3.connect("videojuegos.db")
+    
 
     cursor = conexion.cursor()
 
@@ -512,7 +503,7 @@ def cambiar_nombre():
         """
         SELECT *
         FROM usuarios
-        WHERE nombre = %s
+        WHERE nombre = ?
         """,
         (nombre_nuevo,)
     )
@@ -528,8 +519,8 @@ def cambiar_nombre():
     cursor.execute(
         """
         UPDATE usuarios
-        SET nombre = %s
-        WHERE nombre = %s
+        SET nombre = ?
+        WHERE nombre = ?
         """,
         (nombre_nuevo, nombre_actual)
     )
@@ -537,8 +528,8 @@ def cambiar_nombre():
     cursor.execute(
         """
         UPDATE resenas
-        SET usuario = %s
-        WHERE usuario = %s
+        SET usuario = ?
+        WHERE usuario = ?
         """,
         (nombre_nuevo, nombre_actual)
     )
@@ -546,8 +537,8 @@ def cambiar_nombre():
     cursor.execute(
         """
         UPDATE favoritos
-        SET usuario = %s
-        WHERE usuario = %s
+        SET usuario = ?
+        WHERE usuario = ?
         """,
         (nombre_nuevo, nombre_actual)
     )
@@ -555,8 +546,8 @@ def cambiar_nombre():
     cursor.execute(
         """
         UPDATE likes
-        SET usuario = %s
-        WHERE usuario = %s
+        SET usuario = ?
+        WHERE usuario = ?
         """,
         (nombre_nuevo, nombre_actual)
     )
@@ -588,9 +579,7 @@ def guardar_reseña():
 
     usuario = session["usuario"]
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    conexion = sqlite3.connect("videojuegos.db")
 
     cursor = conexion.cursor()
 
@@ -599,8 +588,8 @@ def guardar_reseña():
         SELECT *
         FROM resenas
 
-        WHERE usuario = %s
-        AND juego_id = %s
+        WHERE usuario = ?
+        AND juego_id = ?
         """,
         (usuario, juego_id)
     )
@@ -618,7 +607,7 @@ def guardar_reseña():
         INSERT INTO resenas
         (juego_id, usuario, nota, comentario)
 
-        VALUES (%s, %s, %s, %s)
+        VALUES (?, ?, ?, ?)
         """,
         (juego_id, usuario, nota, comentario)
     )
@@ -634,45 +623,44 @@ def like_resena(resena_id):
 
     if "usuario" not in session:
 
-        return render_template(
-            "mensaje.html",
-            titulo="Debes iniciar sesión",
-            mensaje="Necesitas una cuenta para dar likes."
-        )
+        return redirect("/login")
 
     usuario = session["usuario"]
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    conexion = sqlite3.connect("videojuegos.db")
 
     cursor = conexion.cursor()
-
 
     cursor.execute(
         """
         SELECT *
         FROM likes
-
-        WHERE usuario = %s
-        AND reseña_id = %s
+        WHERE usuario = ?
+        AND resena_id = ?
         """,
         (usuario, resena_id)
     )
 
     like_existente = cursor.fetchone()
 
-
     if like_existente:
 
         cursor.execute(
             """
             DELETE FROM likes
-
-            WHERE usuario = %s
-            AND reseña_id = %s
+            WHERE usuario = ?
+            AND resena_id = ?
             """,
             (usuario, resena_id)
+        )
+
+        cursor.execute(
+            """
+            UPDATE resenas
+            SET likes = likes - 1
+            WHERE id = ?
+            """,
+            (resena_id,)
         )
 
     else:
@@ -680,19 +668,27 @@ def like_resena(resena_id):
         cursor.execute(
             """
             INSERT INTO likes
-            (usuario, reseña_id)
-
-            VALUES (%s, %s)
+            (usuario, resena_id)
+            VALUES (?, ?)
             """,
             (usuario, resena_id)
         )
 
+        cursor.execute(
+            """
+            UPDATE resenas
+            SET likes = likes + 1
+            WHERE id = ?
+            """,
+            (resena_id,)
+        )
 
     conexion.commit()
 
     conexion.close()
 
     return redirect(request.referrer)
+
 
 @app.route("/api/like/<int:resena_id>")
 def api_like(resena_id):
@@ -703,17 +699,15 @@ def api_like(resena_id):
             "error": True
         })
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    conexion = sqlite3.connect("videojuegos.db")
 
     cursor = conexion.cursor()
 
     cursor.execute(
         """
-        UPDATE reseñas
+        UPDATE resenas
         SET likes = likes + 1
-        WHERE id = %s
+        WHERE id = ?
         """,
         (resena_id,)
     )
@@ -723,8 +717,8 @@ def api_like(resena_id):
     cursor.execute(
         """
         SELECT likes
-        FROM reseñas
-        WHERE id = %s
+        FROM resenas
+        WHERE id = ?
         """,
         (resena_id,)
     )
@@ -740,14 +734,19 @@ def api_like(resena_id):
 @app.route("/borrar_resena/<int:id_resena>")
 def borrar_resena(id_resena):
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    if "usuario" not in session:
+
+        return redirect("/login")
+
+    conexion = sqlite3.connect("videojuegos.db")
 
     cursor = conexion.cursor()
 
     cursor.execute(
-        "DELETE FROM reseñas WHERE id = %s",
+        """
+        DELETE FROM resenas
+        WHERE id = ?
+        """,
         (id_resena,)
     )
 
@@ -755,14 +754,7 @@ def borrar_resena(id_resena):
 
     conexion.close()
 
-    return redirect("/")
-
-@app.route("/logout")
-def logout():
-
-    session.pop("usuario", None)
-
-    return redirect("/")
+    return redirect(request.referrer)
 
 @app.route("/usuario/<nombre>")
 def perfil_usuario(nombre):
@@ -773,9 +765,8 @@ def perfil_usuario(nombre):
 
     usuario = nombre
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    conexion = sqlite3.connect("videojuegos.db")
+    
 
     cursor = conexion.cursor()
 
@@ -783,7 +774,7 @@ def perfil_usuario(nombre):
     """
     SELECT foto
     FROM usuarios
-    WHERE nombre = %s
+    WHERE nombre = ?
     """,
     (usuario,)
 )
@@ -798,9 +789,8 @@ def perfil_usuario(nombre):
 
      foto_usuario = None
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    conexion = sqlite3.connect("videojuegos.db")
+    
 
     cursor = conexion.cursor()
 
@@ -813,18 +803,18 @@ def perfil_usuario(nombre):
 
     FROM resenas
 
-    WHERE usuario = %s
+    WHERE usuario = ?
     """,
     (usuario,)
   )
 
-    reseñas_db = cursor.fetchall()
+    resenas_db = cursor.fetchall()
 
-    reseñas = []
+    resenas = []
 
-    for reseña in reseñas_db:
+    for resena in resenas_db:
 
-        id_juego = reseña[0]
+        id_juego = resena[0]
 
         url = f"https://api.rawg.io/api/games/{id_juego}?key={API_KEY}"
 
@@ -834,12 +824,12 @@ def perfil_usuario(nombre):
 
         nombre_juego = juego["name"]
 
-        reseñas.append(
+        resenas.append(
             (
                 nombre_juego,
-                reseña[1],
-                reseña[2],
-                reseña[3]
+                resena[1],
+                resena[2],
+                resena[3]
             )
         )
 
@@ -847,7 +837,7 @@ def perfil_usuario(nombre):
     """
     SELECT juego_id
     FROM favoritos
-    WHERE usuario = %s
+    WHERE usuario = ?
     """,
     (usuario,)
 )
@@ -870,10 +860,12 @@ def perfil_usuario(nombre):
 
     conexion.close()
 
+    print(foto_usuario)
+
     return render_template(
         "perfil.html",
         usuario=usuario,
-        reseñas=reseñas,
+        resenas=resenas,
         favoritos=favoritos,
         foto_usuario=foto_usuario
     )
@@ -887,9 +879,8 @@ def agregar_favorito(id_juego):
 
     usuario = session["usuario"]
 
-    conexion = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-    )
+    conexion = sqlite3.connect("videojuegos.db")
+    
 
     cursor = conexion.cursor()
 
@@ -898,8 +889,8 @@ def agregar_favorito(id_juego):
     """
     SELECT * FROM favoritos
 
-    WHERE usuario = %s
-    AND juego_id = %s
+    WHERE usuario = ?
+    AND juego_id = ?
     """,
     (usuario, id_juego)
 )
@@ -913,8 +904,8 @@ def agregar_favorito(id_juego):
         """
         DELETE FROM favoritos
 
-        WHERE usuario = %s
-        AND juego_id = %s
+        WHERE usuario = ?
+        AND juego_id = ?
         """,
         (usuario, id_juego)
     )
@@ -926,7 +917,7 @@ def agregar_favorito(id_juego):
         INSERT INTO favoritos
         (usuario, juego_id)
 
-        VALUES (%s, %s)
+        VALUES (?, ?)
         """,
         (usuario, id_juego)
     )
@@ -945,57 +936,69 @@ def subir_foto():
 
         return redirect("/login")
 
+    if "foto" not in request.files:
+
+        return redirect(f"/usuario/{session['usuario']}")
+
     archivo = request.files["foto"]
 
-    if archivo:
+    if archivo.filename == "":
 
-        nombre_archivo = secure_filename(
-            archivo.filename
-        )
+        return redirect(f"/usuario/{session['usuario']}")
 
-        carpeta_uploads = os.path.join(
-            app.root_path,
-            "static",
-            "uploads"
-        )
-
-        os.makedirs(
-            carpeta_uploads,
-            exist_ok=True
-        )
-
-        ruta = os.path.join(
-            carpeta_uploads,
-            nombre_archivo
-        )
-
-        archivo.save(ruta)
-
-        conexion = psycopg2.connect(
-            os.getenv("DATABASE_URL")
-        )
-
-        cursor = conexion.cursor()
-
-        cursor.execute(
-            """
-            UPDATE usuarios
-            SET foto = %s
-            WHERE nombre = %s
-            """,
-            (
-                nombre_archivo,
-                session["usuario"]
-            )
-        )
-
-        conexion.commit()
-
-        conexion.close()
-
-    return redirect(
-        f"/usuario/{session['usuario']}"
+    carpeta_uploads = os.path.join(
+        app.root_path,
+        "static",
+        "uploads"
     )
+
+    os.makedirs(carpeta_uploads, exist_ok=True)
+
+    extension = archivo.filename.rsplit(".", 1)[1].lower()
+
+    nombre_archivo = (
+        session["usuario"]
+        + "."
+        + extension
+    )
+
+    nombre_archivo = secure_filename(nombre_archivo)
+
+    ruta = os.path.join(
+        carpeta_uploads,
+        nombre_archivo
+    )
+
+    archivo.save(ruta)
+
+    conexion = sqlite3.connect("videojuegos.db")
+
+    cursor = conexion.cursor()
+
+    cursor.execute(
+        """
+        UPDATE usuarios
+        SET foto = ?
+        WHERE nombre = ?
+        """,
+        (
+            nombre_archivo,
+            session["usuario"]
+        )
+    )
+
+    conexion.commit()
+
+    conexion.close()
+
+    return redirect(f"/usuario/{session['usuario']}")
+
+@app.route("/logout")
+def logout():
+
+    session.pop("usuario", None)
+
+    return redirect("/")
 
 @app.route("/offline")
 def offline():

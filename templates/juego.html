@@ -67,7 +67,7 @@
 
             <span>
 
-                Basado en {{ promedio[1] }} reseñas
+                Basado en {{ promedio[1] }} resenas
 
             </span>
 
@@ -149,7 +149,7 @@
 
             </form>
 
-            {% for reseña in reseñas %}
+            {% for resena in resenas %}
 
             <div class="card-reseña">
 
@@ -159,21 +159,21 @@
                     <div class="usuario-reseña">
 
                         <a
-                        href="/usuario/{{ reseña[1] }}"
+                        href="/usuario/{{ resena[1] }}"
                         class="perfil-link">
 
                             <div class="avatar-reseña">
 
-                            {% if reseña[4] %}
+                            {% if resena[4] %}
 
                             <img
-                            src="/static/uploads/{{ reseña[4] }}"
+                            src="/static/uploads/{{ resena[4] }}"
                             class="foto-reseña">
 
                                      
                             {% else %}
 
-                            {{ reseña[1][0] }}
+                            {{ resena[1][0] }}
 
                             {% endif %}
 
@@ -181,7 +181,7 @@
 
                             <span>
 
-                                {{ reseña[1] }}
+                                {{ resena[1] }}
 
                             </span>
 
@@ -189,18 +189,18 @@
 
                         <div class="acciones-reseña">
 
-                            <button
-                            class="boton-like"
-                            data-id="{{ reseña[0] }}">
+                            <a
+                            href="/like/{{ resena[0] }}"
+                            class="boton-like">
 
-                            👍 <span>{{ reseña[5] }}</span>
+                            👍 {{ resena[5] }}
 
-                            </button>
+                            </a>
 
-                            {% if session["usuario"] == reseña[1] %}
+                            {% if session["usuario"] == resena[1] %}
 
                             <a
-                            href="/borrar_resena/{{ reseña[0] }}"
+                            href="/borrar_resena/{{ resena[0] }}"
                             class="boton-eliminar">
 
                                 Eliminar reseña
@@ -214,7 +214,7 @@
                    </div>
                     <div class="nota-reseña">
 
-                        ⭐ {{ reseña[2] }}/10
+                        ⭐ {{ resena[2] }}/10
 
                     </div>
 
@@ -224,7 +224,7 @@
 
                     
 
-                    {{ reseña[3] }}
+                    {{ resena[3] }}
 
                 </p>
 
@@ -282,37 +282,6 @@ if ("serviceWorker" in navigator) {
 
 </script>
 
-
-<script>
-
-let botonesLike = document.querySelectorAll(".boton-like");
-
-botonesLike.forEach(function(boton) {
-
-    boton.addEventListener("click", async function() {
-
-        let resenaId = boton.dataset.id;
-
-        let respuesta = await fetch(
-            "/api/like/" + resenaId
-        );
-
-        let datos = await respuesta.json();
-
-        if (datos.error) {
-
-            alert("Debes iniciar sesión");
-
-            return;
-        }
-
-        boton.querySelector("span").innerText = datos.likes;
-
-    });
-
-});
-
-</script>
 
 
 </body>
